@@ -18,7 +18,13 @@ export const Button = (props: ButtonProps) => {
 };
 
 export const PrimaryButton = ({ className, ...props }: ButtonProps) => (
-  <Button className={cx("btn-primary", className)} {...props} />
+  <Button 
+    className={cx(
+      "rounded-md px-4 py-2 font-medium bg-gradient-to-r from-indigo-600 to-purple-600 text-white hover:from-indigo-700 hover:to-purple-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2", 
+      className
+    )} 
+    {...props} 
+  />
 );
 
 type IconButtonProps = ButtonProps & {
@@ -34,9 +40,8 @@ export const IconButton = ({
 }: IconButtonProps) => (
   <Tooltip text={tooltipText}>
     <Button
-      type="button"
       className={cx(
-        "rounded-full outline-none hover:bg-gray-100 focus-visible:bg-gray-100",
+        "rounded-full outline-none hover:bg-indigo-100 focus-visible:bg-indigo-100",
         size === "medium" ? "p-1.5" : "p-1",
         className
       )}

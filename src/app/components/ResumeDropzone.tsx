@@ -97,8 +97,8 @@ export const ResumeDropzone = ({
   return (
     <div
       className={cx(
-        "flex justify-center rounded-md border-2 border-dashed border-gray-300 px-6 ",
-        isHoveredOnDropzone && "border-sky-400",
+        "flex justify-center rounded-lg border-2 border-dashed px-6",
+        isHoveredOnDropzone ? "border-indigo-400 bg-indigo-50/30" : "border-gray-300",
         playgroundView ? "pb-6 pt-4" : "py-12",
         className
       )}
@@ -119,7 +119,7 @@ export const ResumeDropzone = ({
           <Image
             src={addPdfSrc}
             className="mx-auto h-14 w-14"
-            alt="Add pdf"
+            alt="Thêm PDF"
             aria-hidden="true"
             priority
           />
@@ -132,11 +132,11 @@ export const ResumeDropzone = ({
                 !playgroundView && "text-lg font-semibold"
               )}
             >
-              Browse a pdf file or drop it here
+              Chọn file PDF hoặc kéo thả vào đây
             </p>
             <p className="flex text-sm text-gray-500">
               <LockClosedIcon className="mr-1 mt-1 h-3 w-3 text-gray-400" />
-              File data is used locally and never leaves your browser
+              Dữ liệu file chỉ được xử lý ngay trên trình duyệt và không được gửi đi đâu cả
             </p>
           </>
         ) : (
@@ -147,7 +147,7 @@ export const ResumeDropzone = ({
             <button
               type="button"
               className="outline-theme-blue rounded-md p-1 text-gray-400 hover:bg-gray-100 hover:text-gray-500"
-              title="Remove file"
+              title="Xóa file"
               onClick={onRemove}
             >
               <XMarkIcon className="h-6 w-6" />
@@ -159,11 +159,13 @@ export const ResumeDropzone = ({
             <>
               <label
                 className={cx(
-                  "within-outline-theme-purple cursor-pointer rounded-full px-6 pb-2.5 pt-2 font-semibold shadow-sm",
-                  playgroundView ? "border" : "bg-primary"
+                  "within-outline-theme-purple cursor-pointer rounded-full px-6 pb-2.5 pt-2 font-semibold shadow-sm transition-all hover:shadow",
+                  playgroundView 
+                    ? "border border-indigo-400 text-indigo-700 hover:bg-indigo-50" 
+                    : "bg-indigo-600 text-white hover:bg-indigo-700"
                 )}
               >
-                Browse file
+                Chọn file
                 <input
                   type="file"
                   className="sr-only"
@@ -172,7 +174,7 @@ export const ResumeDropzone = ({
                 />
               </label>
               {hasNonPdfFile && (
-                <p className="mt-6 text-red-400">Only pdf file is supported</p>
+                <p className="mt-6 text-red-400">Chỉ hỗ trợ file PDF</p>
               )}
             </>
           ) : (
@@ -183,12 +185,12 @@ export const ResumeDropzone = ({
                   className="btn-primary"
                   onClick={onImportClick}
                 >
-                  Import and Continue <span aria-hidden="true">→</span>
+                  Nhập và Tiếp tục <span aria-hidden="true">→</span>
                 </button>
               )}
-              <p className={cx(" text-gray-500", !playgroundView && "mt-6")}>
-                Note: {!playgroundView ? "Import" : "Parser"} works best on
-                single column resume
+              <p className={cx("text-gray-500", !playgroundView && "mt-6")}>
+                Lưu ý: {!playgroundView ? "Tính năng nhập" : "Trình phân tích"} hoạt động tốt nhất với 
+                sơ yếu lý lịch một cột
               </p>
             </>
           )}

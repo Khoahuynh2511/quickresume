@@ -9,64 +9,64 @@ import { deepClone } from "lib/deep-clone";
 
 export const END_HOME_RESUME: Resume = {
   profile: {
-    name: "John Doe",
+    name: "Nguyễn Văn A",
     summary:
-      "Software engineer obsessed with building exceptional products that people love",
-    email: "hello@openresume.com",
-    phone: "123-456-7890",
-    location: "NYC, NY",
-    url: "linkedin.com/in/john-doe",
+      "Kỹ sư phần mềm đam mê xây dựng các sản phẩm xuất sắc mà mọi người yêu thích",
+    email: "hello@quick-resume.com",
+    phone: "098-765-4321",
+    location: "TP.HCM, Việt Nam",
+    url: "linkedin.com/in/nguyen-van-a",
   },
   workExperiences: [
     {
-      company: "ABC Company",
-      jobTitle: "Software Engineer",
-      date: "May 2023 - Present",
+      company: "Công ty ABC",
+      jobTitle: "Kỹ sư phần mềm",
+      date: "Tháng 5 2025 - Hiện tại",
       descriptions: [
-        "Lead a cross-functional team of 5 engineers in developing a search bar, which enables thousands of daily active users to search content across the entire platform",
-        "Create stunning home page product demo animations that drives up sign up rate by 20%",
-        "Write clean code that is modular and easy to maintain while ensuring 100% test coverage",
+        "Dẫn dắt nhóm 5 kỹ sư đa chức năng trong việc phát triển thanh tìm kiếm, giúp hàng nghìn người dùng hoạt động hàng ngày tìm kiếm nội dung trên toàn bộ nền tảng",
+        "Tạo hoạt ảnh demo sản phẩm trang chủ ấn tượng giúp tăng tỷ lệ đăng ký lên 20%",
+        "Viết mã sạch, mô-đun hóa và dễ bảo trì đồng thời đảm bảo độ phủ kiểm thử 100%",
       ],
     },
     {
-      company: "DEF Organization",
-      jobTitle: "Software Engineer Intern",
-      date: "Summer 2022",
+      company: "Tổ chức DEF",
+      jobTitle: "Thực tập sinh kỹ sư phần mềm",
+      date: "Mùa hè 2024",
       descriptions: [
-        "Re-architected the existing content editor to be mobile responsive that led to a 10% increase in mobile user engagement",
-        "Created a progress bar to help users track progress that drove up user retention by 15%",
-        "Discovered and fixed 5 bugs in the existing codebase to enhance user experience",
+        "Thiết kế lại trình soạn thảo nội dung hiện có để tương thích với thiết bị di động, dẫn đến sự tăng 10% tương tác của người dùng di động",
+        "Tạo thanh tiến trình để giúp người dùng theo dõi tiến độ, giúp tăng 15% tỷ lệ giữ chân người dùng",
+        "Phát hiện và sửa 5 lỗi trong mã nguồn hiện có để nâng cao trải nghiệm người dùng",
       ],
     },
     {
-      company: "XYZ University",
-      jobTitle: "Research Assistant",
-      date: "Summer 2021",
+      company: "Đại học XYZ",
+      jobTitle: "Trợ lý nghiên cứu",
+      date: "Mùa hè 2023",
       descriptions: [
-        "Devised a new NLP algorithm in text classification that results in 10% accuracy increase",
-        "Compiled and presented research findings to a group of 20+ faculty and students",
+        "Phát triển thuật toán NLP mới trong phân loại văn bản giúp tăng 10% độ chính xác",
+        "Tổng hợp và trình bày kết quả nghiên cứu cho nhóm hơn 20 giảng viên và sinh viên",
       ],
     },
   ],
   educations: [
     {
-      school: "XYZ University",
-      degree: "Bachelor of Science in Computer Science",
-      date: "Sep 2019 - May 2023",
+      school: "Đại học XYZ",
+      degree: "Cử nhân Khoa học Máy tính",
+      date: "Tháng 9 2019 - Tháng 5 2023",
       gpa: "3.8",
       descriptions: [
-        "Won 1st place in 2022 Education Hackathon, 2nd place in 2023 Health Tech Competition",
-        "Teaching Assistant for Programming for the Web (2022 - 2023)",
-        "Coursework: Object-Oriented Programming (A+), Programming for the Web (A+), Cloud Computing (A), Introduction to Machine Learning (A-), Algorithms Analysis (A-)",
+        "Đạt giải nhất tại Hackathon Giáo dục 2022, giải nhì tại Cuộc thi Công nghệ Y tế 2023",
+        "Trợ giảng môn Lập trình Web (2022 - 2023)",
+        "Các môn học: Lập trình hướng đối tượng (A+), Lập trình Web (A+), Điện toán Đám mây (A), Nhập môn Học máy (A-), Phân tích Thuật toán (A-)",
       ],
     },
   ],
   projects: [
     {
-      project: "OpenResume",
-      date: "Spring 2023",
+      project: "QuickResume",
+      date: "Xuân 2025",
       descriptions: [
-        "Created and launched a free resume builder web app that allows thousands of users to create professional resume easily and land their dream jobs",
+        "Tạo và ra mắt ứng dụng web tạo CV miễn phí giúp hàng nghìn người dùng dễ dàng tạo CV chuyên nghiệp và đạt được công việc mơ ước",
       ],
     },
   ],
@@ -80,8 +80,8 @@ export const END_HOME_RESUME: Resume = {
       { skill: "C++", rating: 2 },
     ],
     descriptions: [
-      "Tech: React Hooks, GraphQL, Node.js, SQL, Postgres, NoSql, Redis, REST API, Git",
-      "Soft: Teamwork, Creative Problem Solving, Communication, Learning Mindset, Agile",
+      "Kỹ thuật: React Hooks, GraphQL, Node.js, SQL, Postgres, NoSql, Redis, REST API, Git",
+      "Kỹ năng mềm: Làm việc nhóm, Giải quyết vấn đề sáng tạo, Giao tiếp, Tư duy học tập, Agile",
     ],
   },
   custom: {

@@ -17,18 +17,18 @@ export const ProfileForm = () => {
     <BaseForm>
       <div className="grid grid-cols-6 gap-3">
         <Input
-          label="Name"
+          label="Họ tên"
           labelClassName="col-span-full"
           name="name"
-          placeholder="Sal Khan"
+          placeholder="Nguyễn Văn A"
           value={name}
           onChange={handleProfileChange}
         />
         <Textarea
-          label="Objective"
+          label="Mục tiêu nghề nghiệp"
           labelClassName="col-span-full"
           name="summary"
-          placeholder="Entrepreneur and educator obsessed with making education free for anyone"
+          placeholder="Kỹ sư phần mềm đam mê xây dựng các sản phẩm xuất sắc mà mọi người yêu thích"
           value={summary}
           onChange={handleProfileChange}
         />
@@ -36,15 +36,15 @@ export const ProfileForm = () => {
           label="Email"
           labelClassName="col-span-4"
           name="email"
-          placeholder="hello@khanacademy.org"
+          placeholder="hello@example.com"
           value={email}
           onChange={handleProfileChange}
         />
         <Input
-          label="Phone"
+          label="Điện thoại"
           labelClassName="col-span-2"
           name="phone"
-          placeholder="(123)456-7890"
+          placeholder="0987654321"
           value={phone}
           onChange={handleProfileChange}
         />
@@ -52,15 +52,15 @@ export const ProfileForm = () => {
           label="Website"
           labelClassName="col-span-4"
           name="url"
-          placeholder="linkedin.com/in/khanacademy"
+          placeholder="linkedin.com/in/nguyenvana"
           value={url}
           onChange={handleProfileChange}
         />
         <Input
-          label="Location"
+          label="Địa điểm"
           labelClassName="col-span-2"
           name="location"
-          placeholder="NYC, NY"
+          placeholder="TP.HCM, Việt Nam"
           value={location}
           onChange={handleProfileChange}
         />

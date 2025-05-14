@@ -30,7 +30,7 @@ const ResumeControlBar = ({
 
   // Hook to update pdf when document changes
   useEffect(() => {
-    update();
+    update(null as any);
   }, [update, document]);
 
   return (
@@ -56,7 +56,7 @@ const ResumeControlBar = ({
             checked={scaleOnResize}
             onChange={() => setScaleOnResize((prev) => !prev)}
           />
-          <span className="select-none">Autoscale</span>
+          <span className="select-none">Tự động co giãn</span>
         </label>
       </div>
       <a
@@ -65,7 +65,7 @@ const ResumeControlBar = ({
         download={fileName}
       >
         <ArrowDownTrayIcon className="h-4 w-4" />
-        <span className="whitespace-nowrap">Download Resume</span>
+        <span className="whitespace-nowrap">Tải xuống CV</span>
       </a>
     </div>
   );

@@ -7,6 +7,9 @@
   .btn-primary {
     @apply bg-primary outline-theme-purple inline-block rounded-full px-6 py-2 font-semibold shadow-sm;
   }
+  .btn-indigo {
+    @apply bg-indigo-600 hover:bg-indigo-700 text-white inline-block rounded-full px-6 py-2 font-semibold shadow-sm transition-all duration-300 hover:shadow-lg;
+  }
   .text-primary {
     @apply bg-gradient-to-r from-[color:var(--theme-purple)] to-[color:var(--theme-blue)] bg-clip-text text-transparent !important;
   }

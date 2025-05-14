@@ -21,7 +21,7 @@ export default function ImportResume() {
         {!hasUsedAppBefore ? (
           <>
             <h1 className="text-lg font-semibold text-gray-900">
-              Import data from an existing resume
+              Nhập dữ liệu từ CV đã có
             </h1>
             <ResumeDropzone
               onFileUrlChange={onFileUrlChange}
@@ -31,8 +31,8 @@ export default function ImportResume() {
               <>
                 <OrDivider />
                 <SectionWithHeadingAndCreateButton
-                  heading="Don't have a resume yet?"
-                  buttonText="Create from scratch"
+                  heading="Chưa có CV sẵn?"
+                  buttonText="Tạo từ đầu"
                 />
               </>
             )}
@@ -42,14 +42,14 @@ export default function ImportResume() {
             {!hasAddedResume && (
               <>
                 <SectionWithHeadingAndCreateButton
-                  heading="You have data saved in browser from prior session"
-                  buttonText="Continue where I left off"
+                  heading="Bạn có dữ liệu đã lưu trong trình duyệt từ phiên trước"
+                  buttonText="Tiếp tục từ lần trước"
                 />
                 <OrDivider />
               </>
             )}
             <h1 className="font-semibold text-gray-900">
-              Override data with a new resume
+              Ghi đè dữ liệu với CV mới
             </h1>
             <ResumeDropzone
               onFileUrlChange={onFileUrlChange}
@@ -65,7 +65,7 @@ export default function ImportResume() {
 const OrDivider = () => (
   <div className="mx-[-2.5rem] flex items-center pb-6 pt-8" aria-hidden="true">
     <div className="flex-grow border-t border-gray-200" />
-    <span className="mx-2 mt-[-2px] flex-shrink text-lg text-gray-400">or</span>
+    <span className="mx-2 mt-[-2px] flex-shrink text-lg text-gray-400">hoặc</span>
     <div className="flex-grow border-t border-gray-200" />
   </div>
 );

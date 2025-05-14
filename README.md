@@ -1,71 +1,71 @@
-# OpenResume
+# QuickResume
 
-OpenResume is a powerful open-source resume builder and resume parser.
+QuickResume là công cụ tạo và phân tích CV mạnh mẽ.
 
-The goal of OpenResume is to provide everyone with free access to a modern professional resume design and enable anyone to apply for jobs with confidence.
+Mục tiêu của QuickResume là cung cấp cho mọi người quyền truy cập miễn phí vào thiết kế CV chuyên nghiệp hiện đại và cho phép mọi người tự tin ứng tuyển việc làm.
 
-Official site: [https://open-resume.com](https://open-resume.com)
+Trang chính thức: [https://quick-resume.com](https://quick-resume.com)
 
-## ⚒️ Resume Builder
+## ⚒️ Công cụ tạo CV
 
-OpenResume's resume builder allows user to create a modern professional resume easily.
+Công cụ tạo CV của QuickResume cho phép người dùng dễ dàng tạo CV chuyên nghiệp hiện đại.
 
-![Resume Builder Demo](https://i.ibb.co/jzcrrt8/resume-builder-demo-optimize.gif)
+![Demo tạo CV](https://i.ibb.co/jzcrrt8/resume-builder-demo-optimize.gif)
 
-It has 5 Core Features:
-| <div style="width:285px">**Feature**</div> | **Description** |
+Có 5 tính năng cốt lõi:
+| <div style="width:285px">**Tính năng**</div> | **Mô tả** |
 |---|---|
-| **1. Real Time UI Update** | The resume PDF is updated in real time as you enter your resume information, so you can easily see the final output. |
-| **2. Modern Professional Resume Design** | The resume PDF is a modern professional design that adheres to U.S. best practices and is ATS friendly to top ATS platforms such as Greenhouse and Lever. It automatically formats fonts, sizes, margins, bullet points to ensure consistency and avoid human errors. |
-| **3. Privacy Focus** | The app only runs locally on your browser, meaning no sign up is required and no data ever leaves your browser, so it gives you peace of mind on your personal data. (Fun fact: Running only locally means the app still works even if you disconnect the internet.) |
-| **4. Import From Existing Resume PDF** | If you already have an existing resume PDF, you have the option to import it directly, so you can update your resume design to a modern professional design in literally a few seconds. |
-| **5. Successful Track Record** | OpenResume users have landed interviews and offers from top companies, such as Dropbox, Google, Meta to name a few. It has been proven to work and liken by recruiters and hiring managers. |
+| **1. Cập nhật UI theo thời gian thực** | PDF CV được cập nhật theo thời gian thực khi bạn nhập thông tin CV, vì vậy bạn có thể dễ dàng xem kết quả cuối cùng. |
+| **2. Thiết kế CV chuyên nghiệp hiện đại** | PDF CV có thiết kế chuyên nghiệp hiện đại tuân theo các phương pháp hay nhất của Hoa Kỳ và thân thiện với ATS đối với các nền tảng ATS hàng đầu như Greenhouse và Lever. Nó tự động định dạng phông chữ, kích thước, lề, dấu đầu dòng để đảm bảo tính nhất quán và tránh lỗi của con người. |
+| **3. Tập trung vào quyền riêng tư** | Ứng dụng chỉ chạy cục bộ trên trình duyệt của bạn, nghĩa là không cần đăng ký và không có dữ liệu nào rời khỏi trình duyệt của bạn, mang lại cho bạn sự yên tâm về dữ liệu cá nhân. (Thông tin thú vị: Chạy chỉ cục bộ có nghĩa là ứng dụng vẫn hoạt động ngay cả khi bạn ngắt kết nối internet.) |
+| **4. Nhập từ PDF CV hiện có** | Nếu bạn đã có sẵn PDF CV, bạn có thể nhập trực tiếp, vì vậy bạn có thể cập nhật thiết kế CV của mình thành thiết kế chuyên nghiệp hiện đại chỉ trong vài giây. |
+| **5. Thành tích thành công** | Người dùng QuickResume đã nhận được phỏng vấn và lời mời từ các công ty hàng đầu, chẳng hạn như Dropbox, Google, Meta chỉ để kể tên một vài. Nó đã được chứng minh là hiệu quả và được nhà tuyển dụng và người quản lý tuyển dụng đánh giá cao. |
 
-## 🔍 Resume Parser
+## 🔍 Công cụ phân tích CV
 
-OpenResume’s second component is the resume parser. For those who have an existing resume, the resume parser can help test and confirm its ATS readability.
+Thành phần thứ hai của QuickResume là công cụ phân tích CV. Đối với những người đã có CV, công cụ phân tích CV có thể giúp kiểm tra và xác nhận khả năng đọc ATS của nó.
 
-![Resume Parser Demo](https://i.ibb.co/JvSVwNk/resume-parser-demo-optimize.gif)
+![Demo phân tích CV](https://i.ibb.co/JvSVwNk/resume-parser-demo-optimize.gif)
 
-You can learn more about the resume parser algorithm in the ["Resume Parser Algorithm Deep Dive" section](https://open-resume.com/resume-parser).
+Bạn có thể tìm hiểu thêm về thuật toán phân tích CV trong ["Phần phân tích chi tiết thuật toán phân tích CV"](https://quick-resume.com/resume-parser).
 
-## 📚 Tech Stack
+## 📚 Công nghệ sử dụng
 
-| <div style="width:140px">**Category**</div> | <div style="width:100px">**Choice**</div> | **Descriptions** |
+| <div style="width:140px">**Danh mục**</div> | <div style="width:100px">**Lựa chọn**</div> | **Mô tả** |
 |---|---|---|
-| **Language** | [TypeScript](https://github.com/microsoft/TypeScript) | TypeScript is JavaScript with static type checking and helps catch many silly bugs at code time. |
-| **UI Library** | [React](https://github.com/facebook/react) | React’s declarative syntax and component-based architecture make it simple to develop reactive reusable components. |
-| **State Management** | [Redux Toolkit](https://github.com/reduxjs/redux-toolkit) | Redux toolkit reduces the boilerplate to set up and update a central redux store, which is used in managing the complex resume state. |
-| **CSS Framework** | [Tailwind CSS](https://github.com/tailwindlabs/tailwindcss) | Tailwind speeds up development by providing helpful css utilities and removing the need to context switch between tsx and css files. |
-| **Web Framework** | [NextJS 13](https://github.com/vercel/next.js) | Next.js supports static site generation and helps build efficient React webpages that support SEO. |
-| **PDF Reader** | [PDF.js](https://github.com/mozilla/pdf.js) | PDF.js reads content from PDF files and is used by the resume parser at its first step to read a resume PDF’s content. |
-| **PDF Renderer** | [React-pdf](https://github.com/diegomura/react-pdf) | React-pdf creates PDF files and is used by the resume builder to create a downloadable PDF file. |
+| **Ngôn ngữ** | [TypeScript](https://github.com/microsoft/TypeScript) | TypeScript là JavaScript với kiểm tra kiểu tĩnh và giúp bắt nhiều lỗi ngớ ngẩn tại thời điểm code. |
+| **Thư viện UI** | [React](https://github.com/facebook/react) | Cú pháp khai báo của React và kiến trúc dựa trên component giúp đơn giản hóa việc phát triển các component tái sử dụng. |
+| **Quản lý trạng thái** | [Redux Toolkit](https://github.com/reduxjs/redux-toolkit) | Redux toolkit giảm boilerplate để thiết lập và cập nhật redux store trung tâm, được sử dụng để quản lý trạng thái CV phức tạp. |
+| **Framework CSS** | [Tailwind CSS](https://github.com/tailwindlabs/tailwindcss) | Tailwind tăng tốc phát triển bằng cách cung cấp các tiện ích css hữu ích và loại bỏ nhu cầu chuyển đổi ngữ cảnh giữa các file tsx và css. |
+| **Framework Web** | [NextJS](https://github.com/vercel/next.js) | Next.js hỗ trợ tạo trang tĩnh và giúp xây dựng các trang web React hiệu quả hỗ trợ SEO. |
+| **PDF Reader** | [PDF.js](https://github.com/mozilla/pdf.js) | PDF.js đọc nội dung từ các file PDF và được sử dụng bởi công cụ phân tích CV ở bước đầu tiên để đọc nội dung PDF CV. |
+| **PDF Renderer** | [React-pdf](https://github.com/diegomura/react-pdf) | React-pdf tạo các file PDF và được sử dụng bởi công cụ tạo CV để tạo file PDF có thể tải xuống. |
 
-## 📁 Project Structure
+## 📁 Cấu trúc dự án
 
-OpenResume is created with the NextJS web framework and follows its project structure. The source code can be found in `src/app`. There are a total of 4 page routes as shown in the table below. (Code path is relative to `src/app`)
+QuickResume được tạo bằng framework web NextJS và tuân theo cấu trúc dự án của nó. Mã nguồn có thể được tìm thấy trong `src/app`. Có tổng cộng 3 tuyến đường trang như trong bảng dưới đây. (Đường dẫn code tương đối với `src/app`)
 
-| <div style="width:115px">**Page Route**</div> | **Code Path** | **Description** |
+| <div style="width:115px">**Tuyến đường trang**</div> | **Đường dẫn code** | **Mô tả** |
 |---|---|---|
-| / | /page.tsx | Home page that contains hero, auto typing resume, steps, testimonials, logo cloud, etc |
-| /resume-import | /resume-import/page.tsx | Resume import page, where you can choose to import data from an existing resume PDF. The main component used is `ResumeDropzone` (`/components/ResumeDropzone.tsx`) |
-| /resume-builder | /resume-builder/page.tsx | Resume builder page to build and download a resume PDF. The main components used are `ResumeForm` (`/components/ResumeForm`) and `Resume` (`/components/Resume`) |
-| /resume-parser | /resume-parser/page.tsx | Resume parser page to test a resume’s AST readability. The main library util used is `parseResumeFromPdf` (`/lib/parse-resume-from-pdf`) |
+| / | /page.tsx | Trang chủ chứa hero, auto typing resume, steps, testimonials, logo cloud, v.v. |
+| /resume-import | /resume-import/page.tsx | Trang nhập CV, nơi bạn có thể chọn nhập dữ liệu từ PDF CV hiện có. Thành phần chính được sử dụng là `ResumeDropzone` (`/components/ResumeDropzone.tsx`) |
+| /resume-builder | /resume-builder/page.tsx | Trang tạo CV để xây dựng và tải xuống PDF CV. Các thành phần chính được sử dụng là `ResumeForm` (`/components/ResumeForm`) và `Resume` (`/components/Resume`) |
+| /resume-parser | /resume-parser/page.tsx | Trang phân tích CV để kiểm tra khả năng đọc AST của CV. Tiện ích thư viện chính được sử dụng là `parseResumeFromPdf` (`/lib/parse-resume-from-pdf`) |
 
-## 💻 Local Development
+## 💻 Phát triển cục bộ
 
-### Method 1: npm
+### Phương pháp 1: npm
 
-1. Download the repo `git clone https://github.com/xitanggg/open-resume.git`
-2. Change the directory `cd open-resume`
-3. Install the dependency `npm install`
-4. Start a development server `npm run dev`
-5. Open your browser and visit [http://localhost:3000](http://localhost:3000) to see OpenResume live
+1. Tải repo `git clone https://github.com/yourusername/quick-resume.git`
+2. Thay đổi thư mục `cd quick-resume`
+3. Cài đặt các phụ thuộc `npm install`
+4. Bắt đầu server phát triển `npm run dev`
+5. Mở trình duyệt của bạn và truy cập [http://localhost:3000](http://localhost:3000) để xem QuickResume trực tiếp
 
-### Method 2: Docker
+### Phương pháp 2: Docker
 
-1. Download the repo `git clone https://github.com/xitanggg/open-resume.git`
-2. Change the directory `cd open-resume`
-3. Build the container `docker build -t open-resume .`
-4. Start the container `docker run -p 3000:3000 open-resume`
-5. Open your browser and visit [http://localhost:3000](http://localhost:3000) to see OpenResume live
+1. Tải repo `git clone https://github.com/yourusername/quick-resume.git`
+2. Thay đổi thư mục `cd quick-resume`
+3. Xây dựng container `docker build -t quick-resume .`
+4. Bắt đầu container `docker run -p 3000:3000 quick-resume`
+5. Mở trình duyệt của bạn và truy cập [http://localhost:3000](http://localhost:3000) để xem QuickResume trực tiếp

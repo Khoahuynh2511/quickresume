@@ -16,405 +16,13 @@ import type {
 } from "lib/parse-resume-from-pdf/types";
 import { extractProfile } from "lib/parse-resume-from-pdf/extract-resume-from-sections/extract-profile";
 
-export const ResumeParserAlgorithmArticle = ({
-  textItems,
-  lines,
-  sections,
-}: {
-  textItems: TextItems;
-  lines: Lines;
-  sections: ResumeSectionToLines;
-}) => {
-  const getBadgeContent = (item: TextItem) => {
-    const X1 = Math.round(item.x);
-    const X2 = Math.round(item.x + item.width);
-    const Y = Math.round(item.y);
-    let content = `X₁=${X1} X₂=${X2} Y=${Y}`;
-    if (X1 === X2) {
-      content = `X=${X2} Y=${Y}`;
-    }
-    if (isBold(item)) {
-      content = `${content} Bold`;
-    }
-    if (item.hasEOL) {
-      content = `${content} NewLine`;
-    }
-    return content;
-  };
-  const step1TextItemsTable = [
-    ["#", "Text Content", "Metadata"],
-    ...textItems.map((item, idx) => [
-      idx + 1,
-      item.text,
-      <Badge key={idx}>{getBadgeContent(item)}</Badge>,
-    ]),
-  ];
-
-  const step2LinesTable = [
-    ["Lines", "Line Content"],
-    ...lines.map((line, idx) => [
-      idx + 1,
-      line.map((item, idx) => (
-        <span key={idx}>
-          {item.text}
-          {idx !== line.length - 1 && (
-            <span className="select-none font-extrabold text-sky-400">
-              &nbsp;&nbsp;{"|"}&nbsp;&nbsp;
-            </span>
-          )}
-        </span>
-      )),
-    ]),
-  ];
-
-  const { profile, profileScores } = extractProfile(sections);
-  const Scores = ({ scores }: { scores: TextScores }) => {
-    return (
-      <>
-        {scores
-          .sort((a, b) => b.score - a.score)
-          .map((item, idx) => (
-            <span key={idx} className="break-all">
-              <Badge>{item.score}</Badge> {item.text}
-              <br />
-            </span>
-          ))}
-      </>
-    );
-  };
-  const step4ProfileFeatureScoresTable = [
-    [
-      "Resume Attribute",
-      "Text (Highest Feature Score)",
-      "Feature Scores of Other Texts",
-    ],
-    ["Name", profile.name, <Scores key={"Name"} scores={profileScores.name} />],
-    [
-      "Email",
-      profile.email,
-      <Scores key={"Email"} scores={profileScores.email} />,
-    ],
-    [
-      "Phone",
-      profile.phone,
-      <Scores key={"Phone"} scores={profileScores.phone} />,
-    ],
-  ];
-
-  return (
-    <article className="mt-10">
-      <Heading className="text-primary !mt-0 border-t-2 pt-8">
-        Resume Parser Algorithm Deep Dive
-      </Heading>
-      <Paragraph smallMarginTop={true}>
-        For the technical curious, this section will dive into the OpenResume
-        parser algorithm and walks through the 4 steps on how it works. (Note
-        that the algorithm is designed to parse single column resume in English
-        language)
-      </Paragraph>
-      {/* Step 1. Read the text items from a PDF file */}
-      <Heading level={2}>Step 1. Read the text items from a PDF file</Heading>
-      <Paragraph smallMarginTop={true}>
-        A PDF file is a standardized file format defined by the{" "}
-        <Link href="https://www.iso.org/standard/51502.html">
-          ISO 32000 specification
-        </Link>
-        . When you open up a PDF file using a text editor, you'll notice that
-        the raw content looks encoded and is difficult to read. To display it in
-        a readable format, you would need a PDF reader to decode and view the
-        file. Similarly, the resume parser first needs to decode the PDF file in
-        order to extract its text content.
-      </Paragraph>
-      <Paragraph>
-        While it is possible to write a custom PDF reader function following the
-        ISO 32000 specification, it is much simpler to leverage an existing
-        library. In this case, the resume parser uses Mozilla's open source{" "}
-        <Link href="https://github.com/mozilla/pdf.js">pdf.js</Link> library to
-        first extract all the text items in the file.
-      </Paragraph>
-      <Paragraph>
-        The table below lists {textItems.length} text items that are extracted
-        from the resume PDF added. A text item contains the text content and
-        also some metadata about the content, e.g. its x, y positions in the
-        document, whether the font is bolded, or whether it starts a new line.
-        (Note that x,y position is relative to the bottom left corner of the
-        page, which is the origin 0,0)
-      </Paragraph>
-      <div className="mt-4 max-h-72 overflow-y-scroll border scrollbar scrollbar-track-gray-100 scrollbar-thumb-gray-200 scrollbar-w-3">
-        <Table
-          table={step1TextItemsTable}
-          className="!border-none"
-          tdClassNames={["", "", "md:whitespace-nowrap"]}
-        />
-      </div>
-      {/* Step 2. Group text items into lines */}
-      <Heading level={2}>Step 2. Group text items into lines</Heading>
-      <Paragraph smallMarginTop={true}>
-        The extracted text items aren't ready to use yet and have 2 main issues:
-      </Paragraph>
-      <Paragraph>
-        <span className="mt-3 block font-semibold">
-          Issue 1: They have some unwanted noises.
-        </span>
-        Some single text items can get broken into multiple ones, as you might
-        observe on the table above, e.g. a phone number "(123) 456-7890" might
-        be broken into 3 text items "(123) 456", "-" and "7890".
-      </Paragraph>
-      <Paragraph smallMarginTop={true}>
-        <span className="font-semibold">Solution:</span> To tackle this issue,
-        the resume parser connects adjacent text items into one text item if
-        their distance is smaller than the average typical character width,
-        where
-        <span
-          dangerouslySetInnerHTML={{
-            __html: `<math display="block">
-                        <mrow>
-                            <mn>Distance </mn>
-                            <mo>=</mo>
-                            <mn>RightTextItemX₁</mn>
-                            <mo>-</mo>
-                            <mn>LeftTextItemX₂</mn>
-                        </mrow>
-                    </math>`,
-          }}
-          className="my-2 block text-left text-base"
-        />
-        The average typical character width is calculated by dividing the sum of
-        all text items' widths by the total number characters of the text items
-        (Bolded texts and new line elements are excluded to not skew the
-        results).
-      </Paragraph>
-      <Paragraph>
-        <span className="mt-3 block font-semibold">
-          Issue 2: They lack contexts and associations.
-        </span>
-        When we read a resume, we scan a resume line by line. Our brains can
-        process each section via visual cues such as texts' boldness and
-        proximity, where we can quickly associate texts closer together to be a
-        related group. The extracted text items however currently don't have
-        those contexts/associations and are just disjointed elements.
-      </Paragraph>
-      <Paragraph smallMarginTop={true}>
-        <span className="font-semibold">Solution:</span> To tackle this issue,
-        the resume parser reconstructs those contexts and associations similar
-        to how our brain would read and process the resume. It first groups text
-        items into lines since we read text line by line. It then groups lines
-        into sections, which will be discussed in the next step.
-      </Paragraph>
-      <Paragraph>
-        At the end of step 2, the resume parser extracts {lines.length} lines
-        from the resume PDF added, as shown in the table below. The result is
-        much more readable when displayed in lines. (Some lines might have
-        multiple text items, which are separated by a blue vertical divider{" "}
-        <span className="select-none font-extrabold text-sky-400">
-          &nbsp;{"|"}&nbsp;
-        </span>
-        )
-      </Paragraph>
-      <div className="mt-4 max-h-96 overflow-y-scroll border scrollbar scrollbar-track-gray-100 scrollbar-thumb-gray-200 scrollbar-w-3">
-        <Table table={step2LinesTable} className="!border-none" />
-      </div>
-      {/* Step 3. Group lines into sections */}
-      <Heading level={2}>Step 3. Group lines into sections</Heading>
-      <Paragraph smallMarginTop={true}>
-        At step 2, the resume parser starts building contexts and associations
-        to text items by first grouping them into lines. Step 3 continues the
-        process to build additional associations by grouping lines into
-        sections.
-      </Paragraph>
-      <Paragraph>
-        Note that every section (except the profile section) starts with a
-        section title that takes up the entire line. This is a common pattern
-        not just in resumes but also in books and blogs. The resume parser uses
-        this pattern to group lines into the closest section title above these
-        lines.
-      </Paragraph>
-      <Paragraph>
-        The resume parser applies some heuristics to detect a section title. The
-        main heuristic to determine a section title is to check if it fulfills
-        all 3 following conditions: <br />
-        1. It is the only text item in the line <br />
-        2. It is <span className="font-bold">bolded</span> <br />
-        3. Its letters are all UPPERCASE
-        <br />
-      </Paragraph>
-      <Paragraph>
-        In simple words, if a text item is double emphasized to be both bolded
-        and uppercase, it is most likely a section title in a resume. This is
-        generally true for a well formatted resume. There can be exceptions, but
-        it is likely not a good use of bolded and uppercase in those cases.
-      </Paragraph>
-      <Paragraph>
-        The resume parser also has a fallback heuristic if the main heuristic
-        doesn't apply. The fallback heuristic mainly performs a keyword matching
-        against a list of common resume section title keywords.
-      </Paragraph>
-      <Paragraph>
-        At the end of step 3, the resume parser identifies the sections from the
-        resume and groups those lines with the associated section title, as
-        shown in the table below. Note that{" "}
-        <span className="font-bold">the section titles are bolded</span> and{" "}
-        <span className="bg-teal-50">
-          the lines associated with the section are highlighted with the same
-          colors
-        </span>
-        .
-      </Paragraph>
-      <Step3SectionsTable sections={sections} />
-      {/* Step 4. Extract resume from sections */}
-      <Heading level={2}>Step 4. Extract resume from sections</Heading>
-      <Paragraph smallMarginTop={true}>
-        Step 4 is the last step of the resume parsing process and is also the
-        core of the resume parser, where it extracts resume information from the
-        sections.
-      </Paragraph>
-      <Heading level={3}>Feature Scoring System</Heading>
-      <Paragraph smallMarginTop={true}>
-        The gist of the extraction engine is a feature scoring system. Each
-        resume attribute to be extracted has a custom feature sets, where each
-        feature set consists of a feature matching function and a feature
-        matching score if matched (feature matching score can be a positive or
-        negative number). To compute the final feature score of a text item for
-        a particular resume attribute, it would run the text item through all
-        its feature sets and sum up the matching feature scores. This process is
-        carried out for all text items within the section, and the text item
-        with the highest computed feature score is identified as the extracted
-        resume attribute.
-      </Paragraph>
-      <Paragraph>
-        As a demonstration, the table below shows 3 resume attributes in the
-        profile section of the resume PDF added.
-      </Paragraph>
-      <Table table={step4ProfileFeatureScoresTable} className="mt-4" />
-      {(profileScores.name.find((item) => item.text === profile.name)?.score ||
-        0) > 0 && (
-        <Paragraph smallMarginTop={true}>
-          In the resume PDF added, the resume attribute name is likely to be "
-          {profile.name}" since its feature score is{" "}
-          {profileScores.name.find((item) => item.text === profile.name)?.score}
-          , which is the highest feature score out of all text items in the
-          profile section. (Some text items' feature scores can be negative,
-          indicating they are very unlikely to be the targeted attribute)
-        </Paragraph>
-      )}
-      <Heading level={3}>Feature Sets</Heading>
-      <Paragraph smallMarginTop={true}>
-        Having explained the feature scoring system, we can dive more into how
-        feature sets are constructed for a resume attribute. It follows 2
-        principles: <br />
-        1. A resume attribute's feature sets are designed relative to all other
-        resume attributes within the same section. <br />
-        2. A resume attribute's feature sets are manually crafted based on its
-        characteristics and likelihood of each characteristic.
-      </Paragraph>
-      <Paragraph>
-        The table below lists some of the feature sets for the resume attribute
-        name. It contains feature function that matches the name attribute with
-        positive feature score and also feature function that only matches other
-        resume attributes in the section with negative feature score.
-      </Paragraph>
-      <Table
-        table={step4NameFeatureSetsTable}
-        title="Name Feature Sets"
-        className="mt-4"
-      />
-      <Heading level={3}>Core Feature Function</Heading>
-      <Paragraph smallMarginTop={true}>
-        Each resume attribute has multiple feature sets. They can be found in
-        the source code under the extract-resume-from-sections folder and we
-        won't list them all out here. Each resume attribute usually has a core
-        feature function that greatly identifies them, so we will list out the
-        core feature function below.
-      </Paragraph>
-      <Table table={step4CoreFeatureFunctionTable} className="mt-4" />
-      <Heading level={3}>Special Case: Subsections</Heading>
-      <Paragraph smallMarginTop={true}>
-        The last thing that is worth mentioning is subsections. For profile
-        section, we can directly pass all the text items to the feature scoring
-        systems. But for other sections, such as education and work experience,
-        we have to first divide the section into subsections since there can be
-        multiple schools or work experiences in the section. The feature scoring
-        system then process each subsection to retrieve each's resume attributes
-        and append the results.
-      </Paragraph>
-      <Paragraph smallMarginTop={true}>
-        The resume parser applies some heuristics to detect a subsection. The
-        main heuristic to determine a subsection is to check if the vertical
-        line gap between 2 lines is larger than the typical line gap * 1.4,
-        since a well formatted resume usually creates a new empty line break
-        before adding the next subsection. There is also a fallback heuristic if
-        the main heuristic doesn't apply to check if the text item is bolded.
-      </Paragraph>
-      <Paragraph>
-        And that is everything about the OpenResume parser algorithm :)
-      </Paragraph>
-      <Paragraph>
-        Written by <Link href="https://github.com/xitanggg">Xitang</Link> on
-        June 2023
-      </Paragraph>
-    </article>
-  );
-};
-
-const step4NameFeatureSetsTable = [
-  ["Feature Function", "Feature Matching Score"],
-  ["Contains only letters, spaces or periods", "+3"],
-  ["Is bolded", "+2"],
-  ["Contains all uppercase letters", "+2"],
-  ["Contains @", "-4 (match email)"],
-  ["Contains number", "-4 (match phone)"],
-  ["Contains ,", "-4 (match address)"],
-  ["Contains /", "-4 (match url)"],
-];
-
-const step4CoreFeatureFunctionTable = [
-  ["Resume Attribute", "Core Feature Function", "Regex"],
-  ["Name", "Contains only letters, spaces or periods", "/^[a-zA-Z\\s\\.]+$/"],
-  [
-    "Email",
-    <>
-      Match email format xxx@xxx.xxx
-      <br />
-      xxx can be anything not space
-    </>,
-    "/\\S+@\\S+\\.\\S+/",
-  ],
-  [
-    "Phone",
-    <>
-      Match phone format (xxx)-xxx-xxxx <br /> () and - are optional
-    </>,
-    "/\\(?\\d{3}\\)?[\\s-]?\\d{3}[\\s-]?\\d{4}/",
-  ],
-  [
-    "Location",
-    <>Match city and state format {"City, ST"}</>,
-    "/[A-Z][a-zA-Z\\s]+, [A-Z]{2}/",
-  ],
-  ["Url", "Match url format xxx.xxx/xxx", "/\\S+\\.[a-z]+\\/\\S+/"],
-  ["School", "Contains a school keyword, e.g. College, University, School", ""],
-  ["Degree", "Contains a degree keyword, e.g. Associate, Bachelor, Master", ""],
-  ["GPA", "Match GPA format x.xx", "/[0-4]\\.\\d{1,2}/"],
-  [
-    "Date",
-    "Contains date keyword related to year, month, seasons or the word Present",
-    "Year: /(?:19|20)\\d{2}/",
-  ],
-  [
-    "Job Title",
-    "Contains a job title keyword, e.g. Analyst, Engineer, Intern",
-    "",
-  ],
-  ["Company", "Is bolded or doesn't match job title & date", ""],
-  ["Project", "Is bolded or doesn't match date", ""],
-];
-
+// Định nghĩa Step3SectionsTable component trước khi sử dụng
 const Step3SectionsTable = ({
   sections,
 }: {
   sections: ResumeSectionToLines;
 }) => {
-  const table: React.ReactNode[][] = [["Lines", "Line Content"]];
+  const table: React.ReactNode[][] = [["Lines", "Nội dung"]];
   const trClassNames = [];
   let lineCounter = 0;
   const BACKGROUND_COLORS = [
@@ -447,12 +55,14 @@ const Step3SectionsTable = ({
   for (let i = 0; i < sectionsEntries.length; i++) {
     const sectionBackgroundColor = BACKGROUND_COLORS[i % 6];
     const [sectionTitle, lines] = sectionsEntries[i];
+    
     table.push([
       sectionTitle === "profile" ? "" : lineCounter,
-      sectionTitle === "profile" ? "PROFILE" : sectionTitle,
+      sectionTitle === "profile" ? "THÔNG TIN" : sectionTitle,
     ]);
     trClassNames.push(`${sectionBackgroundColor} font-bold`);
     lineCounter += 1;
+    
     for (let j = 0; j < lines.length; j++) {
       table.push([lineCounter, <Line key={lineCounter} line={lines[j]} />]);
       trClassNames.push(sectionBackgroundColor);
@@ -470,3 +80,391 @@ const Step3SectionsTable = ({
     </div>
   );
 };
+
+export const ResumeParserAlgorithmArticle = ({
+  textItems,
+  lines,
+  sections,
+}: {
+  textItems: TextItems;
+  lines: Lines;
+  sections: ResumeSectionToLines;
+}) => {
+  const getBadgeContent = (item: TextItem) => {
+    const X1 = Math.round(item.x);
+    const X2 = Math.round(item.x + item.width);
+    const Y = Math.round(item.y);
+    let content = `X₁=${X1} X₂=${X2} Y=${Y}`;
+    if (X1 === X2) {
+      content = `X=${X2} Y=${Y}`;
+    }
+    if (isBold(item)) {
+      content = `${content} Bold`;
+    }
+    if (item.hasEOL) {
+      content = `${content} NewLine`;
+    }
+    return content;
+  };
+  const step1TextItemsTable = [
+    ["#", "Nội dung văn bản", "Metadata"],
+    ...textItems.map((item, idx) => [
+      idx + 1,
+      item.text,
+      <Badge key={idx}>{getBadgeContent(item)}</Badge>,
+    ]),
+  ];
+
+  const step2LinesTable = [
+    ["Dòng", "Nội dung dòng"],
+    ...lines.map((line, idx) => [
+      idx + 1,
+      line.map((item, idx) => (
+        <span key={idx}>
+          {item.text}
+          {idx !== line.length - 1 && (
+            <span className="select-none font-extrabold text-sky-400">
+              &nbsp;&nbsp;{"|"}&nbsp;&nbsp;
+            </span>
+          )}
+        </span>
+      )),
+    ]),
+  ];
+
+  const { profile, profileScores } = extractProfile(sections);
+  const Scores = ({ scores }: { scores: TextScores }) => {
+    return (
+      <>
+        {scores
+          .sort((a, b) => b.score - a.score)
+          .map((item, idx) => (
+            <span key={idx} className="break-all">
+              <Badge>{item.score}</Badge> {item.text}
+              <br />
+            </span>
+          ))}
+      </>
+    );
+  };
+  const step4ProfileFeatureScoresTable = [
+    [
+      "Thuộc tính",
+      "Văn bản (Điểm cao nhất)",
+      "Điểm của các văn bản khác",
+    ],
+    ["Tên", profile.name, <Scores key={"Name"} scores={profileScores.name} />],
+    [
+      "Email",
+      profile.email,
+      <Scores key={"Email"} scores={profileScores.email} />,
+    ],
+    [
+      "Điện thoại",
+      profile.phone,
+      <Scores key={"Phone"} scores={profileScores.phone} />,
+    ],
+  ];
+
+  return (
+    <article className="mt-10">
+      <Heading className="text-primary !mt-0 border-t-2 pt-8 text-indigo-700">
+        Quy Trình Phân Tích CV Chuyên Sâu
+      </Heading>
+      <Paragraph smallMarginTop={true} className="text-gray-700">
+        Phần này sẽ giới thiệu chi tiết về thuật toán phân tích CV của QuickResume và cách hoạt động 
+        qua 4 bước cơ bản. (Lưu ý rằng thuật toán được thiết kế để phân tích CV tiếng Anh một cột)
+      </Paragraph>
+      {/* Step 1. Read the text items from a PDF file */}
+      <Heading level={2} className="text-indigo-700">Bước 1. Đọc các phần tử văn bản từ file PDF</Heading>
+      <Paragraph smallMarginTop={true} className="text-gray-700">
+        File PDF là một định dạng file chuẩn được định nghĩa bởi{" "}
+        <Link href="https://www.iso.org/standard/51502.html">
+          đặc tả ISO 32000
+        </Link>
+        . Khi mở một file PDF bằng trình soạn thảo văn bản đơn giản, bạn sẽ thấy rằng
+        nội dung được mã hóa và khó đọc. Để hiển thị ở định dạng dễ đọc, bạn cần một trình đọc PDF
+        để giải mã và xem file. Tương tự, trình phân tích CV đầu tiên cần giải mã file PDF
+        để trích xuất nội dung văn bản của nó.
+      </Paragraph>
+      <Paragraph className="text-gray-700">
+        Mặc dù có thể viết một hàm đọc PDF tùy chỉnh theo đặc tả ISO 32000, 
+        nhưng đơn giản hơn nhiều khi sử dụng một thư viện có sẵn. Trong trường hợp này, 
+        trình phân tích CV sử dụng thư viện mã nguồn mở{" "}
+        <Link href="https://github.com/mozilla/pdf.js">pdf.js</Link> của Mozilla để
+        trích xuất tất cả các phần tử văn bản trong file.
+      </Paragraph>
+      <Paragraph className="text-gray-700">
+        Bảng dưới đây liệt kê {textItems.length} phần tử văn bản được trích xuất
+        từ file PDF CV đã thêm. Một phần tử văn bản chứa nội dung văn bản và
+        cả metadata về nội dung, ví dụ như vị trí x, y trên tài liệu, 
+        liệu font có được in đậm hay không, hoặc có bắt đầu một dòng mới không.
+        (Lưu ý rằng vị trí x, y là tương đối so với góc dưới bên trái của
+        trang, là gốc tọa độ 0,0)
+      </Paragraph>
+      <div className="mt-4 max-h-72 overflow-y-scroll border scrollbar scrollbar-track-gray-100 scrollbar-thumb-gray-200 scrollbar-w-3">
+        <Table
+          table={step1TextItemsTable}
+          className="!border-none"
+          tdClassNames={["", "", "md:whitespace-nowrap"]}
+        />
+      </div>
+      {/* Step 2. Group text items into lines */}
+      <Heading level={2} className="text-indigo-700">Bước 2. Nhóm các phần tử văn bản thành dòng</Heading>
+      <Paragraph smallMarginTop={true} className="text-gray-700">
+        Các phần tử văn bản được trích xuất chưa sẵn sàng để sử dụng và có 2 vấn đề chính:
+      </Paragraph>
+      <Paragraph className="text-gray-700">
+        <span className="mt-3 block font-semibold">
+          Vấn đề 1: Chúng có một số nhiễu không mong muốn.
+        </span>
+        Một số phần tử văn bản đơn lẻ có thể bị chia thành nhiều phần, như bạn có thể
+        thấy trên bảng ở trên, ví dụ: một số điện thoại "(123) 456-7890" có thể
+        bị chia thành 3 phần tử văn bản "(123) 456", "-" và "7890".
+      </Paragraph>
+      <Paragraph smallMarginTop={true} className="text-gray-700">
+        <span className="font-semibold">Giải pháp:</span> Để giải quyết vấn đề này,
+        trình phân tích CV kết nối các phần tử văn bản liền kề thành một phần tử nếu
+        khoảng cách giữa chúng nhỏ hơn độ rộng ký tự trung bình, trong đó
+        <span
+          dangerouslySetInnerHTML={{
+            __html: `<math display="block">
+                        <mrow>
+                            <mn>Khoảng cách </mn>
+                            <mo>=</mo>
+                            <mn>X₁ phần tử bên phải</mn>
+                            <mo>-</mo>
+                            <mn>X₂ phần tử bên trái</mn>
+                        </mrow>
+                    </math>`,
+          }}
+          className="my-2 block text-left text-base"
+        />
+        Độ rộng ký tự trung bình được tính bằng cách chia tổng độ rộng
+        của tất cả các phần tử văn bản cho tổng số ký tự của các phần tử văn bản
+        (Văn bản in đậm và phần tử dòng mới được loại trừ để không làm sai lệch
+        kết quả).
+      </Paragraph>
+      <Paragraph className="text-gray-700">
+        <span className="mt-3 block font-semibold">
+          Vấn đề 2: Chúng thiếu ngữ cảnh và sự liên kết.
+        </span>
+        Khi chúng ta đọc một CV, chúng ta quét CV từng dòng một. Não bộ của chúng ta có thể
+        xử lý từng phần thông qua các gợi ý trực quan như độ đậm và
+        sự gần nhau của văn bản, nơi chúng ta có thể nhanh chóng liên kết các văn bản gần nhau hơn để thành
+        một nhóm liên quan. Tuy nhiên, các phần tử văn bản được trích xuất hiện tại không có
+        những ngữ cảnh/liên kết đó và chỉ là các phần tử rời rạc.
+      </Paragraph>
+      <Paragraph smallMarginTop={true} className="text-gray-700">
+        <span className="font-semibold">Giải pháp:</span> Để giải quyết vấn đề này,
+        trình phân tích CV tái tạo lại các ngữ cảnh và liên kết tương tự
+        như cách não bộ chúng ta đọc và xử lý CV. Đầu tiên, nó nhóm các phần tử văn bản
+        thành các dòng vì chúng ta đọc văn bản theo từng dòng. Sau đó, nó nhóm các dòng
+        thành các phần, điều này sẽ được thảo luận ở bước tiếp theo.
+      </Paragraph>
+      <Paragraph className="text-gray-700">
+        Ở cuối bước 2, trình phân tích CV trích xuất {lines.length} dòng
+        từ file PDF CV đã thêm, như được hiển thị trong bảng dưới đây. Kết quả
+        dễ đọc hơn nhiều khi hiển thị theo dòng. (Một số dòng có thể có
+        nhiều phần tử văn bản, được phân tách bằng dấu phân cách dọc màu xanh{" "}
+        <span className="select-none font-extrabold text-sky-400">
+          &nbsp;{"|"}&nbsp;
+        </span>
+        )
+      </Paragraph>
+      <div className="mt-4 max-h-96 overflow-y-scroll border scrollbar scrollbar-track-gray-100 scrollbar-thumb-gray-200 scrollbar-w-3">
+        <Table table={step2LinesTable} className="!border-none" />
+      </div>
+      {/* Step 3. Group lines into sections */}
+      <Heading level={2} className="text-indigo-700">Bước 3. Nhóm các dòng thành các phần</Heading>
+      <Paragraph smallMarginTop={true} className="text-gray-700">
+        Ở bước 2, trình phân tích CV bắt đầu xây dựng ngữ cảnh và liên kết
+        cho các phần tử văn bản bằng cách nhóm chúng thành các dòng. Bước 3 tiếp tục
+        quá trình này để xây dựng thêm các liên kết bằng cách nhóm các dòng thành
+        các phần.
+      </Paragraph>
+      <Paragraph className="text-gray-700">
+        Lưu ý rằng mỗi phần (ngoại trừ phần thông tin cá nhân) bắt đầu bằng một
+        tiêu đề phần chiếm cả dòng. Đây là một mẫu phổ biến
+        không chỉ trong CV mà còn trong sách và blog. Trình phân tích CV sử dụng
+        mẫu này để nhóm các dòng vào tiêu đề phần gần nhất phía trên
+        các dòng đó.
+      </Paragraph>
+      <Paragraph className="text-gray-700">
+        Trình phân tích CV áp dụng một số phương pháp để phát hiện tiêu đề phần. Phương pháp
+        chính để xác định tiêu đề phần là kiểm tra xem nó có đáp ứng
+        cả 3 điều kiện sau không: <br />
+        1. Đó là phần tử văn bản duy nhất trong dòng <br />
+        2. Nó được <span className="font-bold">in đậm</span> <br />
+        3. Tất cả chữ cái đều viết HOA
+        <br />
+      </Paragraph>
+      <Paragraph className="text-gray-700">
+        Nói đơn giản, nếu một phần tử văn bản được nhấn mạnh gấp đôi để vừa in đậm
+        vừa viết hoa, rất có thể đó là tiêu đề phần trong CV. Điều này
+        thường đúng đối với CV được định dạng tốt. Có thể có ngoại lệ, nhưng
+        khả năng đó không phải là cách sử dụng tốt của chữ in đậm và viết hoa.
+      </Paragraph>
+      <Paragraph className="text-gray-700">
+        Trình phân tích CV cũng có một phương pháp dự phòng nếu phương pháp chính
+        không áp dụng được. Phương pháp dự phòng chủ yếu thực hiện việc đối chiếu từ khóa
+        với danh sách các từ khóa tiêu đề phần thông dụng trong CV.
+      </Paragraph>
+      <Paragraph className="text-gray-700">
+        Ở cuối bước 3, trình phân tích CV xác định các phần từ
+        CV và nhóm những dòng đó với tiêu đề phần tương ứng, như
+        được hiển thị trong bảng dưới đây. Lưu ý rằng{" "}
+        <span className="font-bold">các tiêu đề phần được in đậm</span> và{" "}
+        <span className="bg-teal-50">
+          các dòng liên kết với phần được đánh dấu cùng
+          màu
+        </span>
+        .
+      </Paragraph>
+      <Step3SectionsTable sections={sections} />
+      {/* Step 4. Extract resume from sections */}
+      <Heading level={2} className="text-indigo-700">Bước 4. Trích xuất thông tin CV từ các phần</Heading>
+      <Paragraph smallMarginTop={true} className="text-gray-700">
+        Bước 4 là bước cuối cùng của quá trình phân tích CV và cũng là
+        cốt lõi của trình phân tích CV, nơi nó trích xuất thông tin CV từ
+        các phần.
+      </Paragraph>
+      <Heading level={3} className="text-indigo-700">Hệ thống chấm điểm đặc trưng</Heading>
+      <Paragraph smallMarginTop={true} className="text-gray-700">
+        Cốt lõi của công cụ trích xuất là hệ thống chấm điểm đặc trưng. Mỗi
+        thuộc tính CV cần được trích xuất có một tập đặc trưng tùy chỉnh, trong đó mỗi
+        tập đặc trưng bao gồm một hàm đối chiếu đặc trưng và điểm
+        đối chiếu đặc trưng nếu khớp (điểm đối chiếu đặc trưng có thể là số dương hoặc
+        số âm). Để tính điểm đặc trưng cuối cùng của một phần tử văn bản cho
+        một thuộc tính CV cụ thể, nó sẽ chạy phần tử văn bản qua tất cả
+        các tập đặc trưng và cộng các điểm đặc trưng khớp. Quá trình này
+        được thực hiện cho tất cả các phần tử văn bản trong phần, và phần tử văn bản
+        có điểm đặc trưng tính toán cao nhất được xác định là thuộc tính
+        CV được trích xuất.
+      </Paragraph>
+      <Paragraph className="text-gray-700">
+        Để minh họa, bảng dưới đây hiển thị 3 thuộc tính CV trong
+        phần thông tin cá nhân của CV PDF đã thêm.
+      </Paragraph>
+      <Table table={step4ProfileFeatureScoresTable} className="mt-4" />
+      {(profileScores.name.find((item) => item.text === profile.name)?.score ||
+        0) > 0 && (
+        <Paragraph smallMarginTop={true} className="text-gray-700">
+          Trong CV PDF đã thêm, thuộc tính tên CV có khả năng là "
+          {profile.name}" vì điểm đặc trưng của nó là{" "}
+          {profileScores.name.find((item) => item.text === profile.name)?.score}
+          , cao nhất trong tất cả các phần tử văn bản trong phần thông tin cá nhân. (Một số phần tử văn bản có điểm đặc trưng âm,
+          cho thấy chúng rất ít khả năng là thuộc tính đang tìm kiếm)
+        </Paragraph>
+      )}
+      <Heading level={3} className="text-indigo-700">Các tập đặc trưng</Heading>
+      <Paragraph smallMarginTop={true} className="text-gray-700">
+        Sau khi giải thích hệ thống chấm điểm đặc trưng, chúng ta có thể đi sâu hơn vào cách
+        các tập đặc trưng được xây dựng cho một thuộc tính CV. Nó tuân theo 2
+        nguyên tắc: <br />
+        1. Các tập đặc trưng của một thuộc tính CV được thiết kế tương đối so với tất cả các
+        thuộc tính CV khác trong cùng một phần. <br />
+        2. Các tập đặc trưng của một thuộc tính CV được tạo thủ công dựa trên
+        đặc điểm và khả năng của mỗi đặc điểm.
+      </Paragraph>
+      <Paragraph className="text-gray-700">
+        Bảng dưới đây liệt kê một số tập đặc trưng cho thuộc tính tên
+        CV. Nó chứa hàm đặc trưng khớp với thuộc tính tên với
+        điểm đặc trưng dương và cũng chứa hàm đặc trưng chỉ khớp với các
+        thuộc tính CV khác trong phần với điểm đặc trưng âm.
+      </Paragraph>
+      <Table
+        table={step4NameFeatureSetsTable}
+        title="Tập đặc trưng cho Tên"
+        className="mt-4"
+      />
+      <Heading level={3} className="text-indigo-700">Hàm đặc trưng cốt lõi</Heading>
+      <Paragraph smallMarginTop={true} className="text-gray-700">
+        Mỗi thuộc tính CV có nhiều tập đặc trưng. Chúng có thể được tìm thấy trong
+        mã nguồn trong thư mục extract-resume-from-sections và chúng tôi
+        sẽ không liệt kê tất cả ở đây. Mỗi thuộc tính CV thường có một hàm
+        đặc trưng cốt lõi giúp xác định chúng tốt nhất, vì vậy chúng tôi sẽ liệt kê
+        hàm đặc trưng cốt lõi dưới đây.
+      </Paragraph>
+      <Table table={step4CoreFeatureFunctionTable} className="mt-4" />
+      <Heading level={3} className="text-indigo-700">Trường hợp đặc biệt: Các phần con</Heading>
+      <Paragraph smallMarginTop={true} className="text-gray-700">
+        Điều cuối cùng đáng đề cập là các phần con. Đối với phần thông tin cá nhân,
+        chúng ta có thể trực tiếp chuyển tất cả các phần tử văn bản vào hệ thống
+        chấm điểm đặc trưng. Nhưng đối với các phần khác, như học vấn và kinh nghiệm làm việc,
+        chúng ta phải trước tiên chia phần thành các phần con vì có thể có
+        nhiều trường học hoặc kinh nghiệm làm việc trong phần. Hệ thống chấm điểm đặc trưng
+        sau đó xử lý từng phần con để trích xuất các thuộc tính CV của mỗi phần con và
+        thêm kết quả vào.
+      </Paragraph>
+      <Paragraph smallMarginTop={true} className="text-gray-700">
+        Trình phân tích CV áp dụng một số phương pháp để phát hiện phần con. Phương pháp
+        chính để xác định một phần con là kiểm tra xem khoảng trống dòng theo chiều dọc
+        giữa 2 dòng có lớn hơn khoảng trống dòng điển hình * 1,4 không,
+        vì một CV được định dạng tốt thường tạo một dòng trống mới
+        trước khi thêm phần con tiếp theo. Cũng có một phương pháp dự phòng nếu
+        phương pháp chính không áp dụng được để kiểm tra xem phần tử văn bản có được in đậm không.
+      </Paragraph>
+      <Paragraph className="text-gray-700">
+        Và đó là tất cả về thuật toán phân tích CV của QuickResume :)
+      </Paragraph>
+      <Paragraph className="text-gray-700">
+        Được viết bởi <Link href="https://github.com/xitanggg">HDK</Link> vào
+        tháng 5 năm 2025
+      </Paragraph>
+    </article>
+  );
+};
+
+const step4NameFeatureSetsTable = [
+  ["Hàm đặc trưng", "Điểm đối chiếu"],
+  ["Chỉ chứa chữ cái, khoảng trắng hoặc dấu chấm", "+3"],
+  ["Được in đậm", "+2"],
+  ["Chứa toàn bộ chữ viết hoa", "+2"],
+  ["Chứa @", "-4 (khớp với email)"],
+  ["Chứa số", "-4 (khớp với điện thoại)"],
+  ["Chứa dấu phẩy ,", "-4 (khớp với địa chỉ)"],
+  ["Chứa dấu /", "-4 (khớp với URL)"],
+];
+
+const step4CoreFeatureFunctionTable = [
+  ["Thuộc tính CV", "Hàm đặc trưng cốt lõi", "Biểu thức chính quy"],
+  ["Tên", "Chỉ chứa chữ cái, khoảng trắng hoặc dấu chấm", "/^[a-zA-Z\\s\\.]+$/"],
+  [
+    "Email",
+    <>
+      Khớp định dạng email xxx@xxx.xxx
+      <br />
+      xxx có thể là bất kỳ ký tự nào không phải khoảng trắng
+    </>,
+    "/\\S+@\\S+\\.\\S+/",
+  ],
+  [
+    "Điện thoại",
+    <>
+      Khớp định dạng số điện thoại (xxx)-xxx-xxxx <br /> () và - là tùy chọn
+    </>,
+    "/\\(?\\d{3}\\)?[\\s-]?\\d{3}[\\s-]?\\d{4}/",
+  ],
+  [
+    "Địa chỉ",
+    <>Khớp với định dạng thành phố và tiểu bang {"City, ST"}</>,
+    "/[A-Z][a-zA-Z\\s]+, [A-Z]{2}/",
+  ],
+  ["URL", "Khớp định dạng url xxx.xxx/xxx", "/\\S+\\.[a-z]+\\/\\S+/"],
+  ["Trường học", "Chứa từ khóa về trường học, ví dụ: Đại học, Trường, Học viện", ""],
+  ["Bằng cấp", "Chứa từ khóa về bằng cấp, ví dụ: Cử nhân, Thạc sĩ, Tiến sĩ", ""],
+  ["GPA", "Khớp định dạng GPA x.xx", "/[0-4]\\.\\d{1,2}/"],
+  [
+    "Thời gian",
+    "Chứa từ khóa liên quan đến năm, tháng, mùa hoặc từ Hiện tại",
+    "Năm: /(?:19|20)\\d{2}/",
+  ],
+  [
+    "Vị trí",
+    "Chứa từ khóa về vị trí, ví dụ: Chuyên viên, Kỹ sư, Thực tập sinh",
+    "",
+  ],
+  ["Công ty", "Được in đậm hoặc không khớp với vị trí & thời gian", ""],
+  ["Dự án", "Được in đậm hoặc không khớp với thời gian", ""],
+];

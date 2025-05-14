@@ -5,8 +5,8 @@ import { deepClone } from "lib/deep-clone";
 import { cx } from "lib/cx";
 
 const TableRowHeader = ({ children }: { children: React.ReactNode }) => (
-  <tr className="divide-x bg-gray-50">
-    <th className="px-3 py-2 font-semibold" scope="colgroup" colSpan={2}>
+  <tr className="divide-x bg-indigo-50">
+    <th className="px-4 py-3 font-semibold text-indigo-800 rounded-t" scope="colgroup" colSpan={2}>
       {children}
     </th>
   </tr>
@@ -21,11 +21,11 @@ const TableRow = ({
   value: string | string[];
   className?: string | false;
 }) => (
-  <tr className={cx("divide-x", className)}>
-    <th className="px-3 py-2 font-medium" scope="row">
+  <tr className={cx("divide-x hover:bg-gray-50 transition-colors", className)}>
+    <th className="px-4 py-3 font-medium text-gray-700 w-1/4" scope="row">
       {label}
     </th>
-    <td className="w-full px-3 py-2">
+    <td className="w-full px-4 py-3 text-gray-800">
       {typeof value === "string"
         ? value
         : value.map((x, idx) => (
@@ -57,70 +57,70 @@ export const ResumeTable = ({ resume }: { resume: Resume }) => {
     skills.unshift(featuredSkills);
   }
   return (
-    <table className="mt-2 w-full border text-sm text-gray-900">
+    <table className="mt-4 w-full border border-gray-200 rounded-lg text-sm shadow-sm overflow-hidden">
       <tbody className="divide-y text-left align-top">
-        <TableRowHeader>Profile</TableRowHeader>
-        <TableRow label="Name" value={resume.profile.name} />
+        <TableRowHeader>Thông Tin Cá Nhân</TableRowHeader>
+        <TableRow label="Họ và Tên" value={resume.profile.name} />
         <TableRow label="Email" value={resume.profile.email} />
-        <TableRow label="Phone" value={resume.profile.phone} />
-        <TableRow label="Location" value={resume.profile.location} />
-        <TableRow label="Link" value={resume.profile.url} />
-        <TableRow label="Summary" value={resume.profile.summary} />
-        <TableRowHeader>Education</TableRowHeader>
+        <TableRow label="Số Điện Thoại" value={resume.profile.phone} />
+        <TableRow label="Địa Chỉ" value={resume.profile.location} />
+        <TableRow label="Liên Kết" value={resume.profile.url} />
+        <TableRow label="Giới Thiệu" value={resume.profile.summary} />
+        <TableRowHeader>Học Vấn</TableRowHeader>
         {educations.map((education, idx) => (
           <Fragment key={idx}>
-            <TableRow label="School" value={education.school} />
-            <TableRow label="Degree" value={education.degree} />
-            <TableRow label="GPA" value={education.gpa} />
-            <TableRow label="Date" value={education.date} />
+            <TableRow label="Trường Học" value={education.school} />
+            <TableRow label="Bằng Cấp" value={education.degree} />
+            <TableRow label="Điểm GPA" value={education.gpa} />
+            <TableRow label="Thời Gian" value={education.date} />
             <TableRow
-              label="Descriptions"
+              label="Mô Tả Chi Tiết"
               value={education.descriptions}
               className={
                 educations.length - 1 !== 0 &&
                 idx !== educations.length - 1 &&
-                "!border-b-4"
+                "!border-b-4 border-b-indigo-100"
               }
             />
           </Fragment>
         ))}
-        <TableRowHeader>Work Experience</TableRowHeader>
+        <TableRowHeader>Kinh Nghiệm Làm Việc</TableRowHeader>
         {workExperiences.map((workExperience, idx) => (
           <Fragment key={idx}>
-            <TableRow label="Company" value={workExperience.company} />
-            <TableRow label="Job Title" value={workExperience.jobTitle} />
-            <TableRow label="Date" value={workExperience.date} />
+            <TableRow label="Công Ty" value={workExperience.company} />
+            <TableRow label="Vị Trí" value={workExperience.jobTitle} />
+            <TableRow label="Thời Gian" value={workExperience.date} />
             <TableRow
-              label="Descriptions"
+              label="Mô Tả Chi Tiết"
               value={workExperience.descriptions}
               className={
                 workExperiences.length - 1 !== 0 &&
                 idx !== workExperiences.length - 1 &&
-                "!border-b-4"
+                "!border-b-4 border-b-indigo-100"
               }
             />
           </Fragment>
         ))}
         {resume.projects.length > 0 && (
-          <TableRowHeader>Projects</TableRowHeader>
+          <TableRowHeader>Dự Án</TableRowHeader>
         )}
         {resume.projects.map((project, idx) => (
           <Fragment key={idx}>
-            <TableRow label="Project" value={project.project} />
-            <TableRow label="Date" value={project.date} />
+            <TableRow label="Tên Dự Án" value={project.project} />
+            <TableRow label="Thời Gian" value={project.date} />
             <TableRow
-              label="Descriptions"
+              label="Mô Tả Chi Tiết"
               value={project.descriptions}
               className={
                 resume.projects.length - 1 !== 0 &&
                 idx !== resume.projects.length - 1 &&
-                "!border-b-4"
+                "!border-b-4 border-b-indigo-100"
               }
             />
           </Fragment>
         ))}
-        <TableRowHeader>Skills</TableRowHeader>
-        <TableRow label="Descriptions" value={skills} />
+        <TableRowHeader>Kỹ Năng</TableRowHeader>
+        <TableRow label="Các Kỹ Năng" value={skills} />
       </tbody>
     </table>
   );
