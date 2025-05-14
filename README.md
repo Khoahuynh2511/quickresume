@@ -4,7 +4,7 @@ QuickResume là công cụ tạo và phân tích CV mạnh mẽ.
 
 Mục tiêu của QuickResume là cung cấp cho mọi người quyền truy cập miễn phí vào thiết kế CV chuyên nghiệp hiện đại và cho phép mọi người tự tin ứng tuyển việc làm.
 
-Trang chính thức: [https://quick-resume.netlify.app](https://quick-resume.netlify.app)
+Trang chính thức: [https://quickresumeweb.netlify.app](https://quick-resume.netlify.app)
 
 ## ⚒️ Công cụ tạo CV
 
