@@ -2,7 +2,13 @@ import "globals.css";
 import { TopNavBar } from "components/TopNavBar";
 import { Footer } from "components/Footer";
 import { Analytics } from "@vercel/analytics/react";
-import { Metadata } from "next";
+import { Metadata, Viewport } from "next";
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 1,
+};
 
 export const metadata: Metadata = {
   title: "QuickResume - Công cụ tạo và phân tích CV miễn phí",
@@ -33,11 +39,6 @@ export const metadata: Metadata = {
     title: "QuickResume - Công cụ tạo và phân tích CV miễn phí",
     description: "Tạo CV chuyên nghiệp miễn phí và kiểm tra khả năng đọc của hệ thống ATS",
     creator: "@yourhandle",
-  },
-  viewport: {
-    width: "device-width",
-    initialScale: 1,
-    maximumScale: 1,
   },
 };
 

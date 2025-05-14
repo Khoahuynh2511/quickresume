@@ -36,7 +36,8 @@ const RESUME_EXAMPLES = [
 ];
 
 const defaultFileUrl = RESUME_EXAMPLES[0]["fileUrl"];
-export default function ResumeParser() {
+
+export default function ResumeParserPage() {
   const [fileUrl, setFileUrl] = useState(defaultFileUrl);
   const [textItems, setTextItems] = useState<TextItems>([]);
   const lines = groupTextItemsIntoLines(textItems || []);

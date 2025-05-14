@@ -25,6 +25,10 @@ const nextConfig = {
     config.resolve.alias.encoding = false;
     return config;
   },
+  // Sử dụng legacy build trong Node.js environments
+  experimental: {
+    legacyBrowsers: true,
+  }
 };
 
 module.exports = nextConfig;
