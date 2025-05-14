@@ -10,7 +10,6 @@ Trang chính thức: [https://quick-resume.netlify.app](https://quick-resume.net
 
 Công cụ tạo CV của QuickResume cho phép người dùng dễ dàng tạo CV chuyên nghiệp hiện đại.
 
-![Demo tạo CV](https://i.ibb.co/jzcrrt8/resume-builder-demo-optimize.gif)
 
 Có 5 tính năng cốt lõi:
 | <div style="width:285px">**Tính năng**</div> | **Mô tả** |
@@ -24,8 +23,6 @@ Có 5 tính năng cốt lõi:
 ## 🔍 Công cụ phân tích CV
 
 Thành phần thứ hai của QuickResume là công cụ phân tích CV. Đối với những người đã có CV, công cụ phân tích CV có thể giúp kiểm tra và xác nhận khả năng đọc ATS của nó.
-
-![Demo phân tích CV](https://i.ibb.co/JvSVwNk/resume-parser-demo-optimize.gif)
 
 Bạn có thể tìm hiểu thêm về thuật toán phân tích CV trong ["Phần phân tích chi tiết thuật toán phân tích CV"](https://quick-resume.netlify.app/resume-parser).
 
