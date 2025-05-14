@@ -1,6 +1,7 @@
-import { Hero } from "home/Hero";
-import { Steps } from "home/Steps";
-import { QuestionsAndAnswers } from "home/QuestionsAndAnswers";
+"use client";
+import { Hero } from "./home/Hero";
+import { Steps } from "./home/Steps";
+import { QuestionsAndAnswers } from "./home/QuestionsAndAnswers";
 
 export default function Home() {
   return (
