@@ -1,3 +1,5 @@
+import Link from 'next/link';
+
 const STEPS = [
   { 
     title: "Tải lên CV dạng PDF", 
@@ -73,12 +75,12 @@ export const Steps = () => {
         
         {/* CTA button */}
         <div className="text-center mt-12">
-          <a 
+          <Link 
             href="/resume-import" 
             className="inline-block px-8 py-4 bg-indigo-600 text-white font-medium rounded-lg shadow-md transition-all duration-300 hover:shadow-lg transform hover:-translate-y-1 hover:bg-indigo-700"
           >
             Bắt đầu ngay bây giờ
-          </a>
+          </Link>
         </div>
       </div>
     </section>
