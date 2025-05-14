@@ -4,7 +4,7 @@ QuickResume là công cụ tạo và phân tích CV mạnh mẽ.
 
 Mục tiêu của QuickResume là cung cấp cho mọi người quyền truy cập miễn phí vào thiết kế CV chuyên nghiệp hiện đại và cho phép mọi người tự tin ứng tuyển việc làm.
 
-Trang chính thức: [https://quick-resume.com](https://quick-resume.com)
+Trang chính thức: [https://quick-resume.netlify.app](https://quick-resume.netlify.app)
 
 ## ⚒️ Công cụ tạo CV
 
@@ -27,7 +27,7 @@ Thành phần thứ hai của QuickResume là công cụ phân tích CV. Đối 
 
 ![Demo phân tích CV](https://i.ibb.co/JvSVwNk/resume-parser-demo-optimize.gif)
 
-Bạn có thể tìm hiểu thêm về thuật toán phân tích CV trong ["Phần phân tích chi tiết thuật toán phân tích CV"](https://quick-resume.com/resume-parser).
+Bạn có thể tìm hiểu thêm về thuật toán phân tích CV trong ["Phần phân tích chi tiết thuật toán phân tích CV"](https://quick-resume.netlify.app/resume-parser).
 
 ## 📚 Công nghệ sử dụng
 
@@ -40,6 +40,7 @@ Bạn có thể tìm hiểu thêm về thuật toán phân tích CV trong ["Ph�
 | **Framework Web** | [NextJS](https://github.com/vercel/next.js) | Next.js hỗ trợ tạo trang tĩnh và giúp xây dựng các trang web React hiệu quả hỗ trợ SEO. |
 | **PDF Reader** | [PDF.js](https://github.com/mozilla/pdf.js) | PDF.js đọc nội dung từ các file PDF và được sử dụng bởi công cụ phân tích CV ở bước đầu tiên để đọc nội dung PDF CV. |
 | **PDF Renderer** | [React-pdf](https://github.com/diegomura/react-pdf) | React-pdf tạo các file PDF và được sử dụng bởi công cụ tạo CV để tạo file PDF có thể tải xuống. |
+| **Hosting** | [Netlify](https://www.netlify.com/) | Netlify cung cấp hosting nhanh chóng, bảo mật và miễn phí cho ứng dụng web tĩnh. |
 
 ## 📁 Cấu trúc dự án
 
@@ -56,16 +57,28 @@ QuickResume được tạo bằng framework web NextJS và tuân theo cấu trú
 
 ### Phương pháp 1: npm
 
-1. Tải repo `git clone https://github.com/yourusername/quick-resume.git`
-2. Thay đổi thư mục `cd quick-resume`
+1. Tải repo `git clone https://github.com/Khoahuynh2511/quickresume.git`
+2. Thay đổi thư mục `cd quickresume`
 3. Cài đặt các phụ thuộc `npm install`
 4. Bắt đầu server phát triển `npm run dev`
 5. Mở trình duyệt của bạn và truy cập [http://localhost:3000](http://localhost:3000) để xem QuickResume trực tiếp
 
 ### Phương pháp 2: Docker
 
-1. Tải repo `git clone https://github.com/yourusername/quick-resume.git`
-2. Thay đổi thư mục `cd quick-resume`
+1. Tải repo `git clone https://github.com/Khoahuynh2511/quickresume.git`
+2. Thay đổi thư mục `cd quickresume`
 3. Xây dựng container `docker build -t quick-resume .`
 4. Bắt đầu container `docker run -p 3000:3000 quick-resume`
 5. Mở trình duyệt của bạn và truy cập [http://localhost:3000](http://localhost:3000) để xem QuickResume trực tiếp
+
+## 🚀 Triển khai
+
+Dự án này được cấu hình để triển khai trên Netlify. Bạn có thể triển khai phiên bản của riêng mình bằng cách:
+
+1. Fork repo này
+2. Đăng nhập vào Netlify và tạo dự án mới từ GitHub repo của bạn
+3. Netlify sẽ tự động phát hiện cấu hình NextJS và triển khai trang web
+
+Hoặc sử dụng nút triển khai nhanh:
+
+[![Deploy to Netlify](https://www.netlify.com/img/deploy/button.svg)](https://app.netlify.com/start/deploy?repository=https://github.com/Khoahuynh2511/quickresume)
